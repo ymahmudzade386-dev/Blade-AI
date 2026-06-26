@@ -1,10 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>Blade AI</title>
 </head>
 <body>
-<h1>Blade AI</h1>
-<p>Yakında aktif olacak.</p>
+<h1>🤖 Blade AI</h1>
+<p>Merhaba! Blade AI'ya hoş geldiniz.</p>
+
+<input id="soru" placeholder="Bir soru yaz">
+<button onclick="cevapla()">Gönder</button>
+
+<p id="cevap"></p>
+
+<script>
+function cevapla() {
+  let soru = document.getElementById("soru").value;
+  document.getElementById("cevap").innerHTML =
+    "Sorunuz: " + soru + "<br>Gerçek yapay zekayı daha sonra ekleyeceğiz.";
+}
+</script>
+
 </body>
 </html>
