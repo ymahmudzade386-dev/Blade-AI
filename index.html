@@ -4,92 +4,227 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blade AI</title>
+
 <style>
-body{
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:Arial,sans-serif;
+}
+
+body{
 background:#0f172a;
-color:#fff;
+color:white;
+height:100vh;
 display:flex;
 flex-direction:column;
-height:100vh;
 }
+
 header{
 background:#111827;
 padding:15px;
 text-align:center;
 font-size:28px;
 font-weight:bold;
+border-bottom:1px solid #333;
 }
+
 #chat{
 flex:1;
 overflow-y:auto;
 padding:15px;
 }
-.msg{
+
+.message{
 padding:12px;
-border-radius:10px;
 margin:10px 0;
+border-radius:10px;
 max-width:80%;
+word-wrap:break-word;
 }
+
 .user{
 background:#2563eb;
 margin-left:auto;
 }
+
 .ai{
 background:#1f2937;
 }
+
 .bottom{
 display:flex;
 padding:10px;
 background:#111827;
 }
+
 input{
 flex:1;
 padding:12px;
 border:none;
 border-radius:10px;
 font-size:16px;
+outline:none;
 }
+
 button{
 margin-left:10px;
-padding:12px 20px;
+padding:12px 18px;
 background:#22c55e;
-color:white;
 border:none;
 border-radius:10px;
+color:white;
 font-size:16px;
+cursor:pointer;
+}textarea{
+flex:1;
+padding:12px;
+border:none;
+border-radius:10px;
+resize:none;
+height:50px;
+font-size:16px;
+background:white;
+color:black;
+}
+
+button:hover{
+background:#16a34a;
+}
+
+.typing{
+opacity:.7;
+font-style:italic;
 }
 </style>
 </head>
+
 <body>
 
 <header>🤖 Blade AI</header>
 
 <div id="chat">
-<div class="msg ai">Merhaba! Ben Blade AI. Yakında gerçek yapay zekâ ile çalışacağım.</div>
+<div class="message ai">
+Merhaba! Ben Blade AI. Bana istediğin her şeyi sor.
+</div>
 </div>
 
 <div class="bottom">
-<input id="text" placeholder="Mesaj yaz...">
-<button onclick="send()">Gönder</button>
+<textarea id="prompt" placeholder="Mesajını yaz..."></textarea>
+<button onclick="sendMessage()">Gönder</button>
 </div>
 
 <script>
-function send(){
-let t=document.getElementById("text").value;
-if(!t)return;
 
-document.getElementById("chat").innerHTML+=
-"<div class='msg user'>"+t+"</div>";
+const API_KEY = "";
 
-document.getElementById("chat").innerHTML+=
-"<div class='msg ai'>Bu sürümde henüz AI bağlı değil.</div>";
+const MODEL = "deepseek/deepseek-chat:free";
+  async function sendMessage() {
 
-document.getElementById("text").value="";
-document.getElementById("chat").scrollTop=document.getElementById("chat").scrollHeight;
+const input = document.getElementById("prompt");
+const chat = document.getElementById("chat");
+
+const text = input.value.trim();
+
+if (!text) return;
+
+chat.innerHTML += `
+<div class="message user">${text}</div>
+`;
+
+input.value = "";
+
+chat.innerHTML += `
+<div class="message ai typing" id="typing">
+Blade AI düşünüyor...
+</div>
+`;
+
+chat.scrollTop = chat.scrollHeight;
+
+try {
+
+const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+
+method: "POST",
+
+headers: {
+"Authorization": "Bearer " + API_KEY,
+"Content-Type": "application/json"
+},
+
+body: JSON.stringify({
+model: MODEL,
+messages: [
+{
+role: "user",
+content: text
 }
-</script>
+]
+})
+
+});const data = await response.json();
+
+document.getElementById("typing").remove();
+
+const reply =
+data.choices?.[0]?.message?.content ||
+"Üzgünüm, cevap alınamadı.";
+
+chat.innerHTML += `
+<div class="message ai">${reply}</div>
+`;
+
+chat.scrollTop = chat.scrollHeight;
+
+} catch (err) {
+
+document.getElementById("typing").remove();
+
+chat.innerHTML += `
+<div class="message ai">
+❌ Hata oluştu. API anahtarını ve internet bağlantını kontrol et.
+</div>
+`;
+
+chat.scrollTop = chat.scrollHeight;
+
+console.error(err);
+
+}
+
+}
+
+document
+.getElementById("prompt")
+.addEventListener("keydown", function(e){
+
+if(e.key==="Enter" && !e.shiftKey){
+e.preventDefault();
+sendMessage();
+}
+
+});window.onload = () => {
+  document.getElementById("prompt").focus();
+};
+
+function addMessage(type, text) {
+  const chat = document.getElementById("chat");
+
+  chat.innerHTML += `
+    <div class="message ${type}">
+      ${text}
+    </div>
+  `;
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function clearChat() {
+  document.getElementById("chat").innerHTML =
+    '<div class="message ai">Sohbet temizlendi.</div>';
+}</script>
 
 </body>
 </html>
