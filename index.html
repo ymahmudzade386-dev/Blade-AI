@@ -4,15 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blade AI</title>
-
 <style>
 body{
 margin:0;
-background:#0f172a;
 font-family:Arial,sans-serif;
-color:white;
+background:#0f172a;
+color:#fff;
+display:flex;
+flex-direction:column;
+height:100vh;
 }
-
 header{
 background:#111827;
 padding:15px;
@@ -20,36 +21,29 @@ text-align:center;
 font-size:28px;
 font-weight:bold;
 }
-
 #chat{
-height:70vh;
-overflow:auto;
+flex:1;
+overflow-y:auto;
 padding:15px;
 }
-
+.msg{
+padding:12px;
+border-radius:10px;
+margin:10px 0;
+max-width:80%;
+}
 .user{
 background:#2563eb;
-padding:10px;
-border-radius:10px;
-margin:10px 0;
+margin-left:auto;
 }
-
 .ai{
 background:#1f2937;
-padding:10px;
-border-radius:10px;
-margin:10px 0;
 }
-
 .bottom{
-position:fixed;
-bottom:0;
-width:100%;
 display:flex;
-background:#111827;
 padding:10px;
+background:#111827;
 }
-
 input{
 flex:1;
 padding:12px;
@@ -57,60 +51,43 @@ border:none;
 border-radius:10px;
 font-size:16px;
 }
-
 button{
 margin-left:10px;
 padding:12px 20px;
-border:none;
-border-radius:10px;
 background:#22c55e;
 color:white;
+border:none;
+border-radius:10px;
 font-size:16px;
 }
 </style>
-
 </head>
 <body>
 
 <header>🤖 Blade AI</header>
 
 <div id="chat">
-<div class="ai">Merhaba! Ben Blade AI. Bana bir şey sor.</div>
+<div class="msg ai">Merhaba! Ben Blade AI. Yakında gerçek yapay zekâ ile çalışacağım.</div>
 </div>
 
 <div class="bottom">
-<input id="mesaj" placeholder="Mesaj yaz...">
-<button onclick="gonder()">Gönder</button>
+<input id="text" placeholder="Mesaj yaz...">
+<button onclick="send()">Gönder</button>
 </div>
 
 <script>
-function gonder(){
-
-let mesaj=document.getElementById("mesaj").value;
-
-if(mesaj=="") return;
+function send(){
+let t=document.getElementById("text").value;
+if(!t)return;
 
 document.getElementById("chat").innerHTML+=
-"<div class='user'>"+mesaj+"</div>";
-
-let cevap="Bunu henüz bilmiyorum.";
-
-if(mesaj.toLowerCase().includes("merhaba"))
-cevap="Merhaba! Nasılsın?";
-
-if(mesaj.toLowerCase().includes("adın"))
-cevap="Ben Blade AI.";
-
-if(mesaj.toLowerCase().includes("nasılsın"))
-cevap="İyiyim, teşekkür ederim.";
+"<div class='msg user'>"+t+"</div>";
 
 document.getElementById("chat").innerHTML+=
-"<div class='ai'>"+cevap+"</div>";
+"<div class='msg ai'>Bu sürümde henüz AI bağlı değil.</div>";
 
-document.getElementById("mesaj").value="";
-
-window.scrollTo(0,document.body.scrollHeight);
-
+document.getElementById("text").value="";
+document.getElementById("chat").scrollTop=document.getElementById("chat").scrollHeight;
 }
 </script>
 
