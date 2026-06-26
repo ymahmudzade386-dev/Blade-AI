@@ -1,23 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blade AI</title>
+
+<style>
+body{
+margin:0;
+background:#0f172a;
+font-family:Arial,sans-serif;
+color:white;
+}
+
+header{
+background:#111827;
+padding:15px;
+text-align:center;
+font-size:28px;
+font-weight:bold;
+}
+
+#chat{
+height:70vh;
+overflow:auto;
+padding:15px;
+}
+
+.user{
+background:#2563eb;
+padding:10px;
+border-radius:10px;
+margin:10px 0;
+}
+
+.ai{
+background:#1f2937;
+padding:10px;
+border-radius:10px;
+margin:10px 0;
+}
+
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+display:flex;
+background:#111827;
+padding:10px;
+}
+
+input{
+flex:1;
+padding:12px;
+border:none;
+border-radius:10px;
+font-size:16px;
+}
+
+button{
+margin-left:10px;
+padding:12px 20px;
+border:none;
+border-radius:10px;
+background:#22c55e;
+color:white;
+font-size:16px;
+}
+</style>
+
 </head>
 <body>
-<h1>🤖 Blade AI</h1>
-<p>Merhaba! Blade AI'ya hoş geldiniz.</p>
 
-<input id="soru" placeholder="Bir soru yaz">
-<button onclick="cevapla()">Gönder</button>
+<header>🤖 Blade AI</header>
 
-<p id="cevap"></p>
+<div id="chat">
+<div class="ai">Merhaba! Ben Blade AI. Bana bir şey sor.</div>
+</div>
+
+<div class="bottom">
+<input id="mesaj" placeholder="Mesaj yaz...">
+<button onclick="gonder()">Gönder</button>
+</div>
 
 <script>
-function cevapla() {
-  let soru = document.getElementById("soru").value;
-  document.getElementById("cevap").innerHTML =
-    "Sorunuz: " + soru + "<br>Gerçek yapay zekayı daha sonra ekleyeceğiz.";
+function gonder(){
+
+let mesaj=document.getElementById("mesaj").value;
+
+if(mesaj=="") return;
+
+document.getElementById("chat").innerHTML+=
+"<div class='user'>"+mesaj+"</div>";
+
+let cevap="Bunu henüz bilmiyorum.";
+
+if(mesaj.toLowerCase().includes("merhaba"))
+cevap="Merhaba! Nasılsın?";
+
+if(mesaj.toLowerCase().includes("adın"))
+cevap="Ben Blade AI.";
+
+if(mesaj.toLowerCase().includes("nasılsın"))
+cevap="İyiyim, teşekkür ederim.";
+
+document.getElementById("chat").innerHTML+=
+"<div class='ai'>"+cevap+"</div>";
+
+document.getElementById("mesaj").value="";
+
+window.scrollTo(0,document.body.scrollHeight);
+
 }
 </script>
 
